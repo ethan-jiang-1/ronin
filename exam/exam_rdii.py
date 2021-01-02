@@ -153,10 +153,10 @@ def read_dataset_rdii_directly(w=1):
     tango_pos = imu_all[['pos_x', 'pos_y', 'pos_z']].values
 
     tango_ori = imu_all[['ori_w', 'ori_x', 'ori_y', 'ori_z']].values
-    tango_rv = imu_all[['rv_w', 'rv_x', 'rv_y', 'rv_z']].values
+    rv = imu_all[['rv_w', 'rv_x', 'rv_y', 'rv_z']].values
 
     init_tango_ori = quaternion.quaternion(*tango_ori[0])
-    game_rv = quaternion.from_float_array(tango_rv)
+    game_rv = quaternion.from_float_array(rv)
 
     init_rotor = init_tango_ori * game_rv[0].conj()
     ori = init_rotor * game_rv

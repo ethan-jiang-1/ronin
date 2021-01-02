@@ -17,11 +17,9 @@ HDF5 data format
 * data.hdf5
      |---raw
      |    |---tango
-     |          |---gyro, gyro_uncalib, acce, magnet, game_rv, gravity, linacce, step, tango_pose, rv, 
-     pressure, (optional) wifi, gps, magnetic_rv, magnet_uncalib
+     |          |---gyro, gyro_uncalib, acce, magnet, game_rv, gravity, linacce, step, tango_pose, rv, pressure, (optional) wifi, gps, magnetic_rv, magnet_uncalib
      |    |--- imu
-     |          |---gyro, gyro_uncalib, acce, magnet, game_rv, gravity, linacce, step. rv, pressure, (optional) wifi, 
-     gps, magnetic_rv, magnet_uncalib
+     |          |---gyro, gyro_uncalib, acce, magnet, game_rv, gravity, linacce, step. rv, pressure, (optional) wifi, gps, magnetic_rv, magnet_uncalib
      |--synced
      |    |---gyro, gyro_uncalib, acce, magnet, game_rv, rv, gravity, linacce, step
      |---pose
