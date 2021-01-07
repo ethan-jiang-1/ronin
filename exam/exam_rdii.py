@@ -1,9 +1,16 @@
+# hack to hook modules in subfolder
 import os
 import sys
 app_root = os.path.dirname(os.path.dirname(__file__))
-print(app_root)
-sys.path.append(app_root)
-sys.path.append(app_root + "/source")
+app_root_source = app_root + "/source"
+app_root_exam = app_root + "/exam"
+if app_root not in sys.path:
+    sys.path.append(app_root)
+if app_root_source not in sys.path:
+    sys.path.append(app_root_source)
+if app_root_exam not in sys.path:
+    sys.path.append(app_root_exam)
+
 
 from source.data_ridi import RIDIGlobSpeedSequence
 from source.data_glob_speed import SequenceToSequenceDataset
@@ -174,4 +181,6 @@ def read_dataset_rdii_directly(w=1):
 
     return features, targets
 
-read_dataset_rdii_directly()
+
+if __name__ == '__main__':
+    read_dataset_rdii_directly()
