@@ -1,6 +1,7 @@
 ds_rdii
 ds_train_1
 trained_models
+output
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

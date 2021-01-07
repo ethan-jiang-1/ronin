@@ -33,6 +33,22 @@ def _fake_sys_argv():
     if "test" not in sys.argv:
         sys.argv.append("test")
 
+
+'''
+Heading Network
+run source/ronin_body_heading.py with mode(train/test). Please refer to the source code for the full list of command line arguments. Optionally you can specify a configuration file such as config/heading_model_defaults.json with the data paths.
+Example training command: python ronin_body_heading.py train 
+                            --config < path-to-your-config-file > 
+                            --out_dir < path-to-output-folder > 
+                            --weights 1.0, 0.2.
+
+Example testing command: python ronin_body_heading.py test 
+                            --config <path-to-your-config-file> 
+                            --test_list <path-to-test-list> 
+                            --out_dir <path-to-output-folder> 
+                            --model_path <path-to-model-checkpoint>.
+'''
+
 def _get_args():
     """
     Run file with individual arguments or/and config file. If argument appears in both config file and args, 
@@ -121,7 +137,8 @@ def _run_test_body_heading(args, kwargs):
 
 def _fake_args(args):
     args.model_path = app_root + "/trained_models/ronin_body_heading/checkpoints/ronin_body_heading.pt"
-    args.test_path = app_root + "/ds_train_1/a000_1"
+    args.test_path = app_root + "/ds_train_1/a001_1"
+    args.out_dir = app_root + "/output"
     return args
 
 if __name__ == '__main__':
