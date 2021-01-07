@@ -21,10 +21,10 @@ from source.utils import load_config
 print("app_root", app_root)
 
 def _find_config_file():
-    filename = app_root + '/config/heading_model_defaults.json'
+    filename = app_root + '/config/saved_heading_model_defaults.json'
     if os.path.isfile(filename):
         return filename
-    filename = osp.abspath(osp.join(osp.abspath(__file__), '../../config/heading_model_defaults.json'))
+    filename = osp.abspath(osp.join(osp.abspath(__file__), '../../config/saved_heading_model_defaults.json'))
     if os.path.isfile(filename):
         return filename
     raise ValueError("failed_locate_config")
