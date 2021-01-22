@@ -120,7 +120,7 @@ def _train(new_args):
     #_run_test_body_heading(args, kwargs)
 
     if new_args is not None:
-        for key, value in enumerate(new_args):
+        for key, value in new_args.items():
             setattr(args, key, value)
 
     return _run_train_resnet(args, kwargs)
@@ -134,5 +134,7 @@ class RonninResnetTrain(object):
 
 
 if __name__ == '__main__':
-    RonninResnetTrain.train(None)
+    new_args = {}
+    new_args["epochs"] = 100
+    RonninResnetTrain.train(new_args)
 
