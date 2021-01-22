@@ -109,42 +109,30 @@ def _prepare_args(new_args):
             setattr(args, key, value)
     return args
 
-def _train(new_args):
-    args = _prepare_args(new_args)
-    from source.ronin_resnet import train
-    return train(args)
-
-def _test(new_args):
-    args = _prepare_args(new_args)
-    from source.ronin_resnet import test_sequence
-    return test_sequence(args)
-
-def _select_model(new_args):
-    args = _prepare_args(new_args)
-
-    from source.ronin_resnet import select_model
-    return select_model(args)
-
-def _inspect_model(model):
-    from source.ronin_resnet import inspect_model
-    return inspect_model(model)
-
 class RonninResnetTrain(object):
     @classmethod
     def train(cls, new_args):
-        return _train(new_args)
+        args = _prepare_args(new_args)
+        from source.ronin_resnet import train
+        return train(args)
 
     @classmethod
     def test(cls, new_args):
-        return _test(new_args)
+        args = _prepare_args(new_args)
+        from source.ronin_resnet import test_sequence
+        return test_sequence(args)
 
     @classmethod
     def select_model(cls, new_args):
-        return _select_model(new_args)
+        args = _prepare_args(new_args)
+
+        from source.ronin_resnet import select_model
+        return select_model(args)
 
     @classmethod
     def inspect_model(cls, model):
-        return _inspect_model(model)
+        from source.ronin_resnet import inspect_model
+        return inspect_model(model)
 
 
 

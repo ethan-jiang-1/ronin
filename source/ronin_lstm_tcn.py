@@ -310,6 +310,7 @@ def train(args, **kwargs):
         torch.save({'model_state_dict': network.state_dict(),
                     'epoch': epoch,
                     'optimizer_state_dict': optimizer.state_dict()}, model_path)
+    return None, None, model_path
 
 
 def recon_traj_with_preds_global(dataset, preds, ind=None, seq_id=0, type='preds', **kwargs):
