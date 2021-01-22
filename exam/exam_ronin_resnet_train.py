@@ -79,6 +79,7 @@ def _get_args():
     parser.add_argument('--feature_sigma', type=float, default=0.00001)
     parser.add_argument('--target_sigma', type=float, default=0.00001)
 
+    parser.add_argument('-f', type=str, default=None)
     args = parser.parse_args()
 
     print(args)
