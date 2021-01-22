@@ -113,21 +113,26 @@ def _fake_args(args):
     args.epochs = 2
     return args
 
-def _train():
+def _train(new_args):
     _fake_sys_argv()
     args, kwargs = _get_args()
     args = _fake_args(args)
     #_run_test_body_heading(args, kwargs)
+
+    if new_args is not None:
+        for key, value in enumerate(new_args):
+            args[key] = value
+
     _run_train_resnet(args, kwargs)
 
 
 class RonninResnetTrain(object):
     @classmethod
-    def train(cls):
-        _train()
+    def train(cls, new_args):
+        _train(new_args)
 
 
 
 if __name__ == '__main__':
-    RonninResnetTrain.train()
+    RonninResnetTrain.train(None)
 
