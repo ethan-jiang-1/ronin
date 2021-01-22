@@ -1,0 +1,4 @@
+ds_rdii/hang_handheld_normal1
+ds_rdii/hang_handheld_speed1
+ds_rdii/hang_handheld_side3
+ds_rdii/hang_handheld_side4

@@ -108,7 +108,8 @@ def _fake_args(args):
     args.root_dir = app_root
     #args.test_path = app_root + "/ds_train_1/a001_1"
     args.out_dir = app_root + "/output"
-    args.train_list = app_root + "/lists/list_train_tiny.txt"
+    args.train_list = app_root + "/lists/list_train_ridi_tiny.txt"
+    args.dataset = "ridi"
     args.epochs = 2
     return args
 

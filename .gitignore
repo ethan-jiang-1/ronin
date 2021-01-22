@@ -1,4 +1,10 @@
-ds_rdii
+ds_rdii/***/*.txt
+ds_rdii/***/*.ply
+ds_rdii/***/*.png
+ds_rdii/***/result*.csv
+
+
+
 ds_train_1
 trained_models
 trained_models_fixed

@@ -1,6 +1,0 @@
-ds_train_1/a001_1
-ds_train_1/a001_3
-ds_train_1/a002_1
-ds_train_1/a002_2
-ds_train_1/a003_1
-ds_train_1/a003_2
