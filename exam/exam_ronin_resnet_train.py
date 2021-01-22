@@ -76,6 +76,7 @@ def _get_args():
     parser.add_argument('--target_sigma', type=float, default=0.00001)
 
     parser.add_argument('--model_summary', type=bool, default=True)
+    parser.add_argument('--keep_training', type=bool, default=False)
 
     parser.add_argument('-f', type=str, default=None)
     args = parser.parse_args()
@@ -151,6 +152,8 @@ if __name__ == '__main__':
     new_args = {}
     new_args["epochs"] = 1
     new_args["train_list"] = app_root + "/lists/list_train_ridi_tiny.txt"
+    new_args["model_path"] = app_root + "/trained_models/ronin_resnet/checkpoint_gsn_latest.pt"
+    new_args["keep_training"] = False
 
     test_paths = []
     list_path = app_root + "/lists/list_test_ridi_tiny.txt"

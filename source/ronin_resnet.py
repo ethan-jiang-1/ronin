@@ -21,6 +21,7 @@ _fc_config = {'fc_dim': 512, 'in_dim': 7, 'dropout': 0.5, 'trans_planes': 128}
 
 
 def get_model(arch):
+    print("select model arch:", arch)
     if arch == 'resnet18':
         network = ResNet1D(_input_channel, _output_channel, BasicBlock1D, [2, 2, 2, 2],
                            base_plane=64, output_block=FCOutputModule, kernel_size=3, **_fc_config)
@@ -115,6 +116,31 @@ def get_dataset_from_list(root_dir, list_path, args, **kwargs):
         data_list = [s.strip().split(',' or ' ')[0] for s in f.readlines() if len(s) > 0 and s[0] != '#']
     return get_dataset(root_dir, data_list, args, **kwargs)
 
+def select_model(args, device):
+    network = get_model(args.arch).to(device)
+
+    if hasattr(args, "keep_training"):
+        if args.keep_training:
+            print("load parameters from last saved checkpoint and keep_training from ", args.model_path)
+            try:
+                if not torch.cuda.is_available() or args.cpu:
+                    device = torch.device('cpu')
+                    checkpoint = torch.load(
+                        args.model_path, map_location=lambda storage, location: storage)
+                else:
+                    device = torch.device('cuda:0')
+                    checkpoint = torch.load(args.model_path)
+
+                network.load_state_dict(checkpoint['model_state_dict'])
+                network.eval().to(device)
+            except Exception as ex:
+                print("Exception occured", ex)
+
+    if hasattr(args, "model_summary"):
+        if args.model_summary:
+            _inspect_model(network)
+    return network
+
 
 def train(args, **kwargs):
     # Loading data
@@ -145,17 +171,13 @@ def train(args, **kwargs):
     global _fc_config
     _fc_config['in_dim'] = args.window_size // 32 + 1
 
-    network = get_model(args.arch).to(device)
     print('Number of train samples: {}'.format(len(train_dataset)))
     if val_dataset:
         print('Number of val samples: {}'.format(len(val_dataset)))
+    network = select_model(args, device)
     total_params = network.get_num_params()
     print('Total number of parameters: ', total_params)
-
-    if hasattr(args, "model_summary"):
-        if args.model_summary:
-            _inspect_model(network)
-
+    
     criterion = torch.nn.MSELoss()
     optimizer = torch.optim.Adam(network.parameters(), args.lr)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor=0.1, patience=10, verbose=True, eps=1e-12)
@@ -168,8 +190,11 @@ def train(args, **kwargs):
         optimizer.load_state_dict(checkpoints.get('optimizer_state_dict'))
 
     if args.out_dir is not None and osp.exists(osp.join(args.out_dir, 'logs')):
-        summary_writer = SummaryWriter(osp.join(args.out_dir, 'logs'))
-        summary_writer.add_text('info', 'total_param: {}'.format(total_params))
+        try:
+            summary_writer = SummaryWriter(osp.join(args.out_dir, 'logs'))
+            summary_writer.add_text('info', 'total_param: {}'.format(total_params))
+        except Exception as ex:
+            print("exception occured", ex)
 
     step = 0
     best_val_loss = np.inf
