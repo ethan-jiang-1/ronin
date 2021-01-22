@@ -95,7 +95,7 @@ def _get_args():
 
 def _run_train_resnet(args, kwargs):
     from source.ronin_resnet import train
-    train(args)
+    return train(args)
 
 
 def _fake_sys_argv():
@@ -123,13 +123,13 @@ def _train(new_args):
         for key, value in enumerate(new_args):
             args[key] = value
 
-    _run_train_resnet(args, kwargs)
+    return _run_train_resnet(args, kwargs)
 
 
 class RonninResnetTrain(object):
     @classmethod
     def train(cls, new_args):
-        _train(new_args)
+        return _train(new_args)
 
 
 
