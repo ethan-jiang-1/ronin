@@ -89,14 +89,18 @@ def load_cached_sequences(seq_type, root_dir, data_list, cache_path, **kwargs):
                 targ = np.copy(f['target'])
                 aux = np.copy(f['aux'])
         else:
-            seq = seq_type(osp.join(root_dir, data_list[i]), **kwargs)
-            feat, targ, aux = seq.get_feature(), seq.get_target(), seq.get_aux()
-            print(seq.get_meta())
-            if cache_path is not None and osp.isdir(cache_path):
-                with h5py.File(osp.join(cache_path, data_list[i] + '.hdf5'), 'x') as f:
-                    f['feature'] = feat
-                    f['target'] = targ
-                    f['aux'] = aux
+            try:
+                seq = seq_type(osp.join(root_dir, data_list[i]), **kwargs)
+                feat, targ, aux = seq.get_feature(), seq.get_target(), seq.get_aux()
+                print(seq.get_meta())
+                if cache_path is not None and osp.isdir(cache_path):
+                    with h5py.File(osp.join(cache_path, data_list[i] + '.hdf5'), 'x') as f:
+                        f['feature'] = feat
+                        f['target'] = targ
+                        f['aux'] = aux
+            except Exception as ex:
+                print("exception when load data from {}".format(data_list[i]), ex)
+                continue
         features_all.append(feat)
         targets_all.append(targ)
         aux_all.append(aux)

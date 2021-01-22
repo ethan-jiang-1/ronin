@@ -235,6 +235,7 @@ def train(args, **kwargs):
         print('Early terminate')
 
     print('Training complete')
+    model_path = None
     if args.out_dir:
         model_path = osp.join(args.out_dir, 'checkpoints', 'checkpoint_latest.pt')
         torch.save({'model_state_dict': network.state_dict(),
@@ -242,7 +243,7 @@ def train(args, **kwargs):
                     'epoch': total_epoch}, model_path)
         print('Checkpoint saved to ', model_path)
 
-    return train_losses_all, val_losses_all
+    return train_losses_all, val_losses_all, model_path
 
 
 def recon_traj_with_preds(dataset, preds, seq_id=0, **kwargs):
