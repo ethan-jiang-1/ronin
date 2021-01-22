@@ -65,8 +65,7 @@ class StabilizedLocalSpeedSequence(CompiledSequence):
         ori_q = init_rotor * ori_q
 
         dt = (ts[self.w:] - ts[:-self.w])[:, None]
-        glob_v = np.concatenate(
-            [np.zeros([dt.shape[0], 1]), tango_pos[self.w:] - tango_pos[:-self.w]], axis=1) / dt
+        glob_v = np.concatenate([np.zeros([dt.shape[0], 1]), tango_pos[self.w:] - tango_pos[:-self.w]], axis=1) / dt
 
         local_v = ori_q[:-self.w].conj() * quaternion.from_float_array(glob_v) * ori_q[:-self.w]
         local_v = quaternion.as_float_array(local_v)[:, 1:]
