@@ -90,6 +90,26 @@ def get_dataset(root_dir, data_list, args, **kwargs):
     return dataset
 
 
+def _inspect_model(model, batch_size=10, enforced=False):
+    try:
+        from torchinfo import summary        
+        if model is not None and not hasattr(model, "model_examed") or enforced:
+            #if not torch.cuda.is_available():
+            # 6 channel, 200 samples/channel,  this does not include batch size
+            input_size = (6, 200)
+            batch_input_size = (batch_size, *input_size)
+            print("batch_input_shape", batch_input_size)
+            summary(model, batch_input_size, verbose=2, col_names=["input_size",
+                                                                "output_size",
+                                                                "num_params",
+                                                                "kernel_size",
+                                                                "mult_adds"])
+            #model.model_examed = True
+    except Exception as ex:
+        print("Exception occured ", ex)
+        print(model)
+
+
 def get_dataset_from_list(root_dir, list_path, args, **kwargs):
     with open(list_path) as f:
         data_list = [s.strip().split(',' or ' ')[0] for s in f.readlines() if len(s) > 0 and s[0] != '#']
@@ -131,6 +151,10 @@ def train(args, **kwargs):
         print('Number of val samples: {}'.format(len(val_dataset)))
     total_params = network.get_num_params()
     print('Total number of parameters: ', total_params)
+
+    if hasattr(args, "model_summary"):
+        if args.model_summary:
+            _inspect_model(network)
 
     criterion = torch.nn.MSELoss()
     optimizer = torch.optim.Adam(network.parameters(), args.lr)
