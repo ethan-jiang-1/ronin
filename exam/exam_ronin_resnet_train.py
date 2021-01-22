@@ -91,25 +91,41 @@ def _get_args():
 #     args.batch_size = 1
 #     test(args, **kwargs)
 
-def _run_test_resnet(args, kwargs):
-    from source.ronin_resnet import test_sequence
-    test_sequence(args)
+
+def _run_train_resnet(args, kwargs):
+    from source.ronin_resnet import train
+    train(args)
 
 
 def _fake_sys_argv():
     if "test" not in sys.argv:
         sys.argv.append("--mode")
-        sys.argv.append("test")
+        sys.argv.append("train")
 
 def _fake_args(args):
-    args.model_path = app_root + "/trained_models_fixed/ronin_resnet/checkpoint_gsn_latest.pt"
-    args.test_path = app_root + "/ds_train_1/a001_1"
+    #args.model_path = app_root + "/trained_models/ronin_resnet/checkpoint_gsn_latest.pt"
+    args.root_dir = app_root
+    #args.test_path = app_root + "/ds_train_1/a001_1"
     args.out_dir = app_root + "/output"
+    args.train_list = app_root + "/lists/list_train_tiny.txt"
+    args.epochs = 2
     return args
 
-if __name__ == '__main__':
+def _train():
     _fake_sys_argv()
     args, kwargs = _get_args()
     args = _fake_args(args)
     #_run_test_body_heading(args, kwargs)
-    _run_test_resnet(args, kwargs)
+    _run_train_resnet(args, kwargs)
+
+
+class RonninResnetTrain(object):
+    @classmethod
+    def train(cls):
+        _train()
+
+
+
+if __name__ == '__main__':
+    RonninResnetTrain.train()
+

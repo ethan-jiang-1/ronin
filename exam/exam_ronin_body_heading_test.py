@@ -136,7 +136,7 @@ def _run_test_body_heading(args, kwargs):
     test(args, **kwargs)
 
 def _fake_args(args):
-    args.model_path = app_root + "/trained_models/ronin_body_heading/checkpoints/ronin_body_heading.pt"
+    args.model_path = app_root + "/trained_models_fixed/ronin_body_heading/checkpoints/ronin_body_heading.pt"
     args.test_path = app_root + "/ds_train_1/a001_1"
     args.out_dir = app_root + "/output"
     return args
