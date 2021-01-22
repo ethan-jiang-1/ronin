@@ -91,16 +91,6 @@ def _get_args():
 #     args.batch_size = 1
 #     test(args, **kwargs)
 
-
-def _run_train_resnet(args):
-    from source.ronin_resnet import train
-    return train(args)
-
-def _run_test_resnet(args):
-    from source.ronin_resnet import test_sequence
-    return test_sequence(args)
-
-
 def _fake_sys_argv():
     if "test" not in sys.argv:
         sys.argv.append("--mode")
@@ -114,18 +104,7 @@ def _fake_args(args):
     args.epochs = 2
     return args
 
-def _train(new_args):
-    _fake_sys_argv()
-    args, kwargs = _get_args()
-    args = _fake_args(args)
-
-    if new_args is not None:
-        for key, value in new_args.items():
-            setattr(args, key, value)
-
-    return _run_train_resnet(args)
-
-def _test(new_args):
+def _prepare_args(new_args):
     _fake_sys_argv()
     args, kwargs = _get_args()
     args = _fake_args(args)
@@ -134,8 +113,27 @@ def _test(new_args):
     if new_args is not None:
         for key, value in new_args.items():
             setattr(args, key, value)
+    return args
 
-    return _run_test_resnet(args)
+def _train(new_args):
+    args = _prepare_args(new_args)
+    from source.ronin_resnet import train
+    return train(args)
+
+def _test(new_args):
+    args = _prepare_args(new_args)
+    from source.ronin_resnet import test_sequence
+    return test_sequence(args)
+
+def _select_model(new_args):
+    args = _prepare_args(new_args)
+
+    from source.ronin_resnet import select_model
+    return select_model(args)
+
+def _inspect_model(model):
+    from source.ronin_resnet import inspect_model
+    return inspect_model(model)
 
 class RonninResnetTrain(object):
     @classmethod
@@ -145,6 +143,14 @@ class RonninResnetTrain(object):
     @classmethod
     def test(cls, new_args):
         return _test(new_args)
+
+    @classmethod
+    def select_model(cls, new_args):
+        return _select_model(new_args)
+
+    @classmethod
+    def inspect_model(cls, model):
+        return _inspect_model(model)
 
 
 

@@ -91,7 +91,7 @@ def get_dataset(root_dir, data_list, args, **kwargs):
     return dataset
 
 
-def _inspect_model(model, batch_size=10, enforced=False):
+def inspect_model(model, batch_size=10, enforced=False):
     try:
         from torchinfo import summary        
         if model is not None and not hasattr(model, "model_examed") or enforced:
@@ -116,36 +116,38 @@ def get_dataset_from_list(root_dir, list_path, args, **kwargs):
         data_list = [s.strip().split(',' or ' ')[0] for s in f.readlines() if len(s) > 0 and s[0] != '#']
     return get_dataset(root_dir, data_list, args, **kwargs)
 
-def select_model(args, device):
+def select_model(args, device=None):
+    if device is None:
+        device = torch.device('cuda:0' if torch.cuda.is_available() and not args.cpu else 'cpu')
+
     print("\n##loading model ", args.arch)
     network = get_model(args.arch).to(device)
 
     if hasattr(args, "keep_training"):
         if args.keep_training:
-            print("load network from checkpoint and keep_training from ", args.model_path)
-            try:
-                if not torch.cuda.is_available() or args.cpu:
-                    device = torch.device('cpu')
-                    checkpoint = torch.load(
-                        args.model_path, map_location=lambda storage, location: storage)
-                else:
-                    device = torch.device('cuda:0')
-                    checkpoint = torch.load(args.model_path)
+            if os.path.isfile(args.model_path):
+                print("load network from checkpoint and keep_training from ", args.model_path)
+                try:
+                    if not torch.cuda.is_available() or args.cpu:
+                        device = torch.device('cpu')
+                        checkpoint = torch.load(
+                            args.model_path, map_location=lambda storage, location: storage)
+                    else:
+                        device = torch.device('cuda:0')
+                        checkpoint = torch.load(args.model_path)
 
-                network.load_state_dict(checkpoint['model_state_dict'])
-                network.eval().to(device)
-                print("network with parameters from saved checkpoint")
-            except Exception as ex:
-                print("Exception occured", ex)
-                print("network without parameters from saved checkpoint")
+                    network.load_state_dict(checkpoint['model_state_dict'])
+                    network.eval().to(device)
+                    print("network with parameters from saved checkpoint")
+                except Exception as ex:
+                    print("Exception occured", ex)
+                    print("network without parameters from saved checkpoint")
+            else:
+                print("no")
         else:
             print("empty network - no keep_training")
     else:
         print("empty network loaded")
-
-    if hasattr(args, "model_summary"):
-        if args.model_summary:
-            _inspect_model(network)
     return network
 
 
