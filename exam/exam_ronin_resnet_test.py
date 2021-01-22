@@ -105,6 +105,7 @@ def _fake_args(args):
     args.model_path = app_root + "/trained_models_fixed/ronin_resnet/checkpoint_gsn_latest.pt"
     args.test_path = app_root + "/ds_train_1/a001_1"
     args.out_dir = app_root + "/output"
+    args.show_plot = True
     return args
 
 if __name__ == '__main__':

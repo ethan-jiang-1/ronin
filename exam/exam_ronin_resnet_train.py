@@ -91,9 +91,13 @@ def _get_args():
 #     test(args, **kwargs)
 
 
-def _run_train_resnet(args, kwargs):
+def _run_train_resnet(args):
     from source.ronin_resnet import train
     return train(args)
+
+def _run_test_resnet(args):
+    from source.ronin_resnet import test_sequence
+    return test_sequence(args)
 
 
 def _fake_sys_argv():
@@ -102,9 +106,7 @@ def _fake_sys_argv():
         sys.argv.append("train")
 
 def _fake_args(args):
-    #args.model_path = app_root + "/trained_models/ronin_resnet/checkpoint_gsn_latest.pt"
     args.root_dir = app_root
-    #args.test_path = app_root + "/ds_train_1/a001_1"
     args.out_dir = app_root + "/output"
     args.train_list = app_root + "/lists/list_train_ridi_public.txt"
     args.dataset = "ridi"
@@ -115,24 +117,55 @@ def _train(new_args):
     _fake_sys_argv()
     args, kwargs = _get_args()
     args = _fake_args(args)
+
+    if new_args is not None:
+        for key, value in new_args.items():
+            setattr(args, key, value)
+
+    return _run_train_resnet(args)
+
+def _test(new_args):
+    _fake_sys_argv()
+    args, kwargs = _get_args()
+    args = _fake_args(args)
     #_run_test_body_heading(args, kwargs)
 
     if new_args is not None:
         for key, value in new_args.items():
             setattr(args, key, value)
 
-    return _run_train_resnet(args, kwargs)
-
+    return _run_test_resnet(args)
 
 class RonninResnetTrain(object):
     @classmethod
     def train(cls, new_args):
         return _train(new_args)
 
+    @classmethod
+    def test(cls, new_args):
+        return _test(new_args)
+
 
 
 if __name__ == '__main__':
     new_args = {}
-    new_args["epochs"] = 100
-    RonninResnetTrain.train(new_args)
+    new_args["epochs"] = 1
+    new_args["train_list"] = app_root + "/lists/list_train_ridi_tiny.txt"
+
+    test_paths = []
+    list_path = app_root + "/lists/list_test_ridi_tiny.txt"
+    with open(list_path, "rt") as f:
+        for line in f.readlines():
+            line = app_root + "/" + line.strip()
+            if os.path.isdir(line):
+                test_paths.append(line)
+
+    loss_v1, loss_v2, pt_path = RonninResnetTrain.train(new_args)
+
+    new_args["model_path"] = pt_path
+    new_args["test_list"] = list_path
+
+    losses_avg = RonninResnetTrain.test(new_args)
+
+    pass
 

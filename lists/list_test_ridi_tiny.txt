@@ -1,0 +1,2 @@
+ds_rdii/hang_handheld_test1
+ds_rdii/hang_handheld_side_test2
