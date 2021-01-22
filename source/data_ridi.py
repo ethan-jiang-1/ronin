@@ -26,14 +26,27 @@ class RIDIGlobSpeedSequence(CompiledSequence):
         if data_path is not None:
             self.load(data_path)
 
-    def _get_ori_global(self, imu_all, game_rv):
+    def _get_ori_ref_global(self, imu_all, game_rv):
         # Use game rotation vector as device orientation.
         init_tango_ori = quaternion.quaternion(*imu_all[['ori_w', 'ori_x', 'ori_y', 'ori_z']].values[0])
 
         init_game_rv = game_rv[0]
         init_rotor = init_tango_ori * init_game_rv.conj()
         ori = init_rotor * game_rv   
-        return ori    
+        return ori
+
+    def _get_gyro_global(self, ts, gyro, ori):
+        nz = np.zeros(ts.shape)
+        gyro_q = quaternion.from_float_array(np.concatenate([nz, gyro], axis=1))
+        gyro_glob = quaternion.as_float_array(ori * gyro_q * ori.conj())[:, 1:]   
+        return gyro_glob   
+
+    def _get_acce_global(self, ts, acce, ori):
+        nz = np.zeros(ts.shape)
+        acce_q = quaternion.from_float_array(np.concatenate([nz, acce], axis=1))
+        acce_glob = quaternion.as_float_array(ori * acce_q * ori.conj())[:, 1:]
+        return acce_glob
+       
 
     def load(self, path):
         if path[-1] == '/':
@@ -59,16 +72,18 @@ class RIDIGlobSpeedSequence(CompiledSequence):
 
         # init_rotor = init_tango_ori * game_rv[0].conj()
         # ori = init_rotor * game_rv
-        ori = self._get_ori_global(imu_all, game_rv)
+        ori = self._get_ori_ref_global(imu_all, game_rv)
 
         # convert to global frame -- both gyro and acc (rotated by ori)
-        nz = np.zeros(ts.shape)
-        gyro_q = quaternion.from_float_array(np.concatenate([nz, gyro], axis=1))
-        gyro_glob = quaternion.as_float_array(ori * gyro_q * ori.conj())[:, 1:]
+        # nz = np.zeros(ts.shape)
+        # gyro_q = quaternion.from_float_array(np.concatenate([nz, gyro], axis=1))
+        # gyro_glob = quaternion.as_float_array(ori * gyro_q * ori.conj())[:, 1:]
+        gyro_glob = self._get_gyro_global(ts, gyro, ori)
         
-        nz = np.zeros(ts.shape)
-        acce_q = quaternion.from_float_array(np.concatenate([nz, acce], axis=1))
-        acce_glob = quaternion.as_float_array(ori * acce_q * ori.conj())[:, 1:]
+        # nz = np.zeros(ts.shape)
+        # acce_q = quaternion.from_float_array(np.concatenate([nz, acce], axis=1))
+        # acce_glob = quaternion.as_float_array(ori * acce_q * ori.conj())[:, 1:]
+        acce_glob = self._get_acce_global(ts, acce, ori)
 
         #shape [ns, 1]
         self.ts = ts
@@ -77,11 +92,10 @@ class RIDIGlobSpeedSequence(CompiledSequence):
         #shape [ns, 2]  -- speed for x, y only, not include z
         self.targets = (tango_pos[self.w:, :2] - tango_pos[:-self.w, :2]) / (ts[self.w:] - ts[:-self.w])
         
+        # aux data -- just for reference
         self.gt_pos = tango_pos
         self.orientations = quaternion.as_float_array(game_rv)
-        print("TS/Feature/Target shapes", self.ts.shape, self.features.shape, self.targets.shape)
-        print("GtPos/Ori shape", self.gt_pos.shape, self.orientations.shape)
-        print("Interval", self.w)
+        print("TS/Feature/Target shapes", self.ts.shape, self.features.shape, self.targets.shape, "GtPos/Ori shape", self.gt_pos.shape, self.orientations.shape, "Interval (samples/sec)", self.w)
 
     def get_feature(self):
         return self.features
