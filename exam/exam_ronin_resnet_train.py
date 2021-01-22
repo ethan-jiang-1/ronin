@@ -121,7 +121,7 @@ def _train(new_args):
 
     if new_args is not None:
         for key, value in enumerate(new_args):
-            args[key] = value
+            setattr(args, key, value)
 
     return _run_train_resnet(args, kwargs)
 
