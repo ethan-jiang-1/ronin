@@ -117,11 +117,12 @@ def get_dataset_from_list(root_dir, list_path, args, **kwargs):
     return get_dataset(root_dir, data_list, args, **kwargs)
 
 def select_model(args, device):
+    print("\n##loading model ", args.arch)
     network = get_model(args.arch).to(device)
 
     if hasattr(args, "keep_training"):
         if args.keep_training:
-            print("load parameters from last saved checkpoint and keep_training from ", args.model_path)
+            print("load network from checkpoint and keep_training from ", args.model_path)
             try:
                 if not torch.cuda.is_available() or args.cpu:
                     device = torch.device('cpu')
@@ -133,8 +134,14 @@ def select_model(args, device):
 
                 network.load_state_dict(checkpoint['model_state_dict'])
                 network.eval().to(device)
+                print("network with parameters from saved checkpoint")
             except Exception as ex:
                 print("Exception occured", ex)
+                print("network without parameters from saved checkpoint")
+        else:
+            print("empty network - no keep_training")
+    else:
+        print("empty network loaded")
 
     if hasattr(args, "model_summary"):
         if args.model_summary:
@@ -177,7 +184,7 @@ def train(args, **kwargs):
     network = select_model(args, device)
     total_params = network.get_num_params()
     print('Total number of parameters: ', total_params)
-    
+
     criterion = torch.nn.MSELoss()
     optimizer = torch.optim.Adam(network.parameters(), args.lr)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor=0.1, patience=10, verbose=True, eps=1e-12)
@@ -402,9 +409,12 @@ def test_sequence(args):
             plt.show()
 
         if args.out_dir is not None and osp.isdir(args.out_dir):
-            np.save(osp.join(args.out_dir, data + '_gsn.npy'),
-                    np.concatenate([pos_pred[:, :2], pos_gt[:, :2]], axis=1))
-            plt.savefig(osp.join(args.out_dir, data + '_gsn.png'))
+            try:
+                np.save(osp.join(args.out_dir, data + '_gsn.npy'),
+                        np.concatenate([pos_pred[:, :2], pos_gt[:, :2]], axis=1))
+                plt.savefig(osp.join(args.out_dir, data + '_gsn.png'))
+            except Exception as ex:
+                print("Exception occured", ex)
 
         plt.close('all')
 

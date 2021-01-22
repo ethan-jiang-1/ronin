@@ -153,7 +153,8 @@ if __name__ == '__main__':
     new_args["epochs"] = 1
     new_args["train_list"] = app_root + "/lists/list_train_ridi_tiny.txt"
     new_args["model_path"] = app_root + "/trained_models/ronin_resnet/checkpoint_gsn_latest.pt"
-    new_args["keep_training"] = False
+    new_args["keep_training"] = True
+    new_args["show_plot"] = True
 
     test_paths = []
     list_path = app_root + "/lists/list_test_ridi_tiny.txt"
