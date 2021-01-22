@@ -84,12 +84,6 @@ def _get_args():
     print(args)
     return args, {}
 
-# def _run_test_body_heading(args, kwargs):
-#     from source.ronin_body_heading import test
-#     if not args.model_path:
-#         raise ValueError("Model path required")
-#     args.batch_size = 1
-#     test(args, **kwargs)
 
 def _fake_sys_argv():
     if "test" not in sys.argv:
@@ -176,6 +170,3 @@ if __name__ == '__main__':
     new_args["test_list"] = list_path
 
     losses_avg = RonninResnetTrain.test(new_args)
-
-    pass
-
