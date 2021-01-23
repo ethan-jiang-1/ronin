@@ -380,13 +380,14 @@ def test(args, **kwargs):
     if args.out_dir and not osp.exists(args.out_dir):
         os.makedirs(args.out_dir)
 
-    with open(osp.join(str(Path(args.model_path).parents[1]), 'config.json'), 'r') as f:
-        model_data = json.load(f)
+    #with open(osp.join(str(Path(args.model_path).parents[1]), 'config.json'), 'r') as f:
+    #    model_data = json.load(f)
 
     if device.type == 'cpu':
         checkpoint = torch.load(args.model_path, map_location=lambda storage, location: storage)
     else:
-        checkpoint = torch.load(args.model_path, map_location={model_data['device']: args.device})
+        #checkpoint = torch.load(args.model_path, map_location={model_data['device']: args.device})
+        checkpoint = torch.load(args.model_path, map_location=lambda storage, location: storage)
 
     network = get_model(args, **kwargs)
     network.load_state_dict(checkpoint.get('model_state_dict'))
