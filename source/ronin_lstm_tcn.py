@@ -233,6 +233,7 @@ def train(args, **kwargs):
         #with open(json_filename, 'r') as f:
         #    model_data = json.load(f)
 
+        print("\n##Load model parameters from continue_from", args.continue_from)
         if device.type == 'cpu':
             checkpoints = torch.load(args.continue_from, map_location=lambda storage, location: storage)
         else:
