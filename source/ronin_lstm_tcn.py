@@ -442,6 +442,16 @@ def test(args, **kwargs):
         ate_all.append(ate)
         rte_all.append(rte)
 
+        dis_info = ""
+        try:
+            from ex_traj_odometr import TrajOdometer
+            dis_pred = TrajOdometer.get_distance_2D(pos_pred)
+            dis_gt = TrajOdometer.get_distance_2D(pos_gt)
+            dis_info = "distance: gt {:.2f}m pred {:.2f}m err:{:4f}".format(dis_pred, dis_gt, (dis_pred-dis_gt)/dis_gt)
+            print(dis_info)
+        except:
+            pass
+
         print('Sequence {}, Velocity loss {} / {}, ATE: {}, RTE:{}'.format(data, vel_losses, np.mean(vel_losses), ate,
                                                                            rte))
         log_line = format_string(data, np.mean(vel_losses), ate, rte)
@@ -462,6 +472,7 @@ def test(args, **kwargs):
             plt.legend(['Predicted', 'Ground truth'])
             plt.subplot2grid((kp, 2), (kp - 1, 0))
             plt.plot(pos_cum_error)
+            plt.title(dis_info)
             plt.legend(['ATE:{:.3f}, RTE:{:.3f}'.format(ate_all[-1], rte_all[-1])])
             for i in range(kp):
                 plt.subplot2grid((kp, 2), (i, 1))

@@ -255,7 +255,6 @@ if __name__ == '__main__':
     new_args = {}
     new_args["epochs"] = 1
     new_args["train_list"] = app_root + "/lists/list_train_ridi_tiny.txt"
-
     #new_args["model_path"] = app_root + "/trained_models/ronin_resnet/checkpoint_gsn_latest.pt"
     new_args["keep_training"] = True
 

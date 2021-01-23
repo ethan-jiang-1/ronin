@@ -134,27 +134,29 @@ class RonninResnetTrain(object):
         from source.ronin_resnet import inspect_model
         return inspect_model(model)
 
-
-
-if __name__ == '__main__':
-    new_args = {}
-    new_args["epochs"] = 1
-    new_args["train_list"] = app_root + "/lists/list_train_ridi_tiny.txt"
-    new_args["model_path"] = app_root + "/trained_models/ronin_resnet/checkpoint_gsn_latest.pt"
-    new_args["keep_training"] = True
-    new_args["show_plot"] = True
-
+def _get_list_paths(list_path):
     test_paths = []
-    list_path = app_root + "/lists/list_test_ridi_tiny.txt"
     with open(list_path, "rt") as f:
         for line in f.readlines():
             line = app_root + "/" + line.strip()
             if os.path.isdir(line):
                 test_paths.append(line)
+    return test_paths
+
+if __name__ == '__main__':
+    new_args = {}
+    new_args["arch"] = "resnet18"
+    new_args["epochs"] = 1
+    new_args["train_list"] = app_root + "/lists/list_train_ridi_tiny.txt"
+    #new_args["model_path"] = app_root + "/trained_models/ronin_resnet/checkpoint_gsn_latest.pt"
+    new_args["keep_training"] = True
+
+
+    list_path = app_root + "/lists/list_test_ridi_tiny.txt"
 
     loss_v1, loss_v2, pt_path = RonninResnetTrain.train(new_args)
 
     new_args["model_path"] = pt_path
     new_args["test_list"] = list_path
-
+    new_args["show_plot"] = True
     losses_avg = RonninResnetTrain.test(new_args)
