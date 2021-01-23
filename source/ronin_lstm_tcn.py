@@ -136,8 +136,8 @@ def inspect_model(model, batch_size=10, enforced=False):
         if model is not None and not hasattr(model, "model_examed") or enforced:
             #if not torch.cuda.is_available():
             # 6 channel, 200 samples/channel,  this does not include batch size
-            input_size = (6, 200)
-            batch_input_size = (batch_size, *input_size)
+            # input_size = (6, 200)
+            batch_input_size = (2, 400, 6)
             print("batch_input_shape", batch_input_size)
             summary(model, batch_input_size, verbose=2, col_names=["input_size",
                                                                    "output_size",
