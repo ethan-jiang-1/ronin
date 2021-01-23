@@ -18,7 +18,7 @@ if app_root_exam not in sys.path:
 
 from os import path as osp
 from source.utils import load_config
-
+from source.ronin_lstm_tcn import inspect_model  # noqa: F401
 
 print("app_root", app_root)
 
@@ -190,7 +190,6 @@ class RonninTcnTrain(object):
 
     @classmethod
     def inspect_model(cls, model, batch_input_size=(2, 400, 6)):
-        from source.ronin_lstm_tcn import inspect_model
         inspect_model(model, input_size=batch_input_size, batch_dim=None)
 
     @classmethod
@@ -219,7 +218,6 @@ class RonninLstmBiTrain(object):
 
     @classmethod
     def inspect_model(cls, model, batch_input_size): 
-        from source.ronin_lstm_tcn import inspect_model
         inspect_model(model, input_size=batch_input_size, batch_dim=None)
 
     @classmethod
