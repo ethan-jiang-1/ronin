@@ -237,7 +237,7 @@ class RonninLstmTrain(object):
         return get_model(args)
 
     @classmethod
-    def inspect_model(cls, model, batch_input_size=(2, 400, 6)):
+    def inspect_model(cls, model, batch_input_size):  # (2, 400, 6)
         from source.ronin_lstm_tcn import inspect_model
         inspect_model(model, batch_input_size=batch_input_size)
 
