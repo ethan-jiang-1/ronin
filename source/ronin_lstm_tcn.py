@@ -130,16 +130,17 @@ def get_model(args, **kwargs):
     return network
 
 
-def inspect_model(model, enforced=False, batch_input_size=(2, 400, 6)):
+def inspect_model(model, enforced=False, input_size=(2, 400, 6), batch_dim=None):
     try:
         from torchinfo import summary
         if model is not None and not hasattr(model, "model_examed") or enforced:
             #if not torch.cuda.is_available():
             # 6 channel, 200 samples/channel,  this does not include batch size
             # input_size = (6, 200)
-            batch_input_size = batch_input_size
-            print("batch_input_shape", batch_input_size)
-            summary(model, batch_input_size, verbose=2, col_names=["input_size",
+            input_size = input_size
+            print("inspect_model input_size", input_size)
+            print("inspect_model batch_dim", batch_dim)
+            summary(model, input_size=input_size, batch_dim=batch_dim, verbose=2, col_names=["input_size",
                                                                    "output_size",
                                                                    "num_params",
                                                                    "kernel_size",

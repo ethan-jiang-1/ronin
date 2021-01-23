@@ -4,6 +4,8 @@ import numpy as np
 
 import os
 import sys
+
+#from torch._C import R
 app_root = os.path.dirname(os.path.dirname(__file__))
 app_root_source = app_root + "/source"
 app_root_exam = app_root + "/exam"
@@ -189,7 +191,11 @@ class RonninTcnTrain(object):
     @classmethod
     def inspect_model(cls, model, batch_input_size=(2, 400, 6)):
         from source.ronin_lstm_tcn import inspect_model
-        inspect_model(model, batch_input_size=batch_input_size)
+        inspect_model(model, input_size=batch_input_size, batch_dim=None)
+
+    @classmethod
+    def get_name(cls):
+        return "tcn"
 
 
 class RonninLstmBiTrain(object):
@@ -212,10 +218,13 @@ class RonninLstmBiTrain(object):
         return get_model(args)
 
     @classmethod
-    def inspect_model(cls, model, batch_input_size):  # (2, 400, 6)
+    def inspect_model(cls, model, batch_input_size): 
         from source.ronin_lstm_tcn import inspect_model
-        inspect_model(model, batch_input_size=batch_input_size)
+        inspect_model(model, input_size=batch_input_size, batch_dim=None)
 
+    @classmethod
+    def get_name(cls):
+        return "lstm_bi"
 
 class RonninLstmTrain(object):
     @classmethod
@@ -237,10 +246,13 @@ class RonninLstmTrain(object):
         return get_model(args)
 
     @classmethod
-    def inspect_model(cls, model, batch_input_size):  # (2, 400, 6)
+    def inspect_model(cls, model, batch_input_size): 
         from source.ronin_lstm_tcn import inspect_model
-        inspect_model(model, batch_input_size=batch_input_size)
+        inspect_model(model, input_size=batch_input_size, batch_dim=None)
 
+    @classmethod
+    def get_name(cls):
+        return "lstm"
 
 def _get_list_paths(list_path):
     test_paths = []
@@ -262,7 +274,12 @@ if __name__ == '__main__':
     RonninKlass = RonninLstmTrain
 
     model = RonninKlass.select_model(new_args)
-    RonninKlass.inspect_model(model)
+    if RonninKlass.get_name() == "tcn":
+        RonninKlass.inspect_model(model, batch_input_size=(2, 400, 6))
+    elif RonninKlass.get_name == "ltsm":
+        RonninKlass.inspect_model(model, batch_input_size=(1, 1, 6))
+    elif RonninKlass.get_name == "ltsm_bi":
+        RonninKlass.inspect_model(model, batch_input_size=(1, 1, 6))
 
     loss_v1, loss_v2, pt_path = RonninKlass.train(new_args)
 
