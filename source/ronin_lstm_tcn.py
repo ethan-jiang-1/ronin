@@ -9,6 +9,7 @@ import traceback
 
 import numpy as np
 import torch
+#from torchinfo import summary
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.utils.data import DataLoader
 
@@ -253,9 +254,8 @@ def train(args, **kwargs):
 
     print("Starting from epoch {}".format(start_epoch))
     epoch = start_epoch
-    end_epoch = epoch + args.epochs
     try:
-        for epoch in range(start_epoch, end_epoch):
+        for epoch in range(0, args.epochs):
             log_line = ''
             network.train()
             train_vel = MSEAverageMeter(3, [2], _output_channel)
