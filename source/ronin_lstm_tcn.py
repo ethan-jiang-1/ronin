@@ -130,7 +130,7 @@ def get_model(args, **kwargs):
     return network
 
 
-def inspect_model(model, batch_size=10, enforced=False):
+def inspect_model(model, batch_size=10, enforced=False, arch="tcn"):
     try:
         from torchinfo import summary
         if model is not None and not hasattr(model, "model_examed") or enforced:
