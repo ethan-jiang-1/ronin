@@ -152,7 +152,7 @@ def _fake_args(args):
     args.data_dir = app_root 
     return args
 
-def _prepare_args(new_args):
+def _prepare_args(new_args, arch="tcn"):
     _fake_sys_argv()
     args, kwargs = _get_args()
     args = _fake_args(args)
@@ -161,25 +161,52 @@ def _prepare_args(new_args):
     if new_args is not None:
         for key, value in new_args.items():
             setattr(args, key, value)
+    setattr(args, "arch", arch)
+    setattr(args, "type", arch)
     return args
 
 
 class RonninTcnTrain(object):
     @classmethod
     def train(cls, new_args):
-        args = _prepare_args(new_args)
+        args = _prepare_args(new_args, arch="tcn")
         from source.ronin_lstm_tcn import train
         return train(args)
 
     @classmethod
     def test(cls, new_args):
-        args = _prepare_args(new_args)
+        args = _prepare_args(new_args, arch="tcn")
         from source.ronin_lstm_tcn import test
         return test(args)
 
     @classmethod
     def select_model(cls, new_args):
-        args = _prepare_args(new_args)
+        args = _prepare_args(new_args, arch="tcn")
+        from source.ronin_lstm_tcn import get_model
+        return get_model(args)
+
+    @classmethod
+    def inspect_model(cls, model):
+        from source.ronin_lstm_tcn import inspect_model
+        inspect_model(model)
+
+
+class RonninLstmBiTrain(object):
+    @classmethod
+    def train(cls, new_args):
+        args = _prepare_args(new_args, arch="lstm_bi")
+        from source.ronin_lstm_tcn import train
+        return train(args)
+
+    @classmethod
+    def test(cls, new_args):
+        args = _prepare_args(new_args, arch="lstm_bi")
+        from source.ronin_lstm_tcn import test
+        return test(args)
+
+    @classmethod
+    def select_model(cls, new_args):
+        args = _prepare_args(new_args, arch="lstm_bi")
         from source.ronin_lstm_tcn import get_model
         return get_model(args)
 
@@ -190,27 +217,56 @@ class RonninTcnTrain(object):
 
 
 
+class RonninLstmTrain(object):
+    @classmethod
+    def train(cls, new_args):
+        args = _prepare_args(new_args, arch="lstm")
+        from source.ronin_lstm_tcn import train
+        return train(args)
+
+    @classmethod
+    def test(cls, new_args):
+        args = _prepare_args(new_args, arch="lstm")
+        from source.ronin_lstm_tcn import test
+        return test(args)
+
+    @classmethod
+    def select_model(cls, new_args):
+        args = _prepare_args(new_args, arch="lstm")
+        from source.ronin_lstm_tcn import get_model
+        return get_model(args)
+
+    @classmethod
+    def inspect_model(cls, model):
+        from source.ronin_lstm_tcn import inspect_model
+        inspect_model(model)
+
+
+def _get_list_paths(list_path):
+    test_paths = []
+    with open(list_path, "rt") as f:
+        for line in f.readlines():
+            line = app_root + "/" + line.strip()
+            if os.path.isdir(line):
+                test_paths.append(line)
+    return test_paths
+
 if __name__ == '__main__':
     new_args = {}
-    new_args["type"] = "tcn"
     new_args["epochs"] = 1
     new_args["train_list"] = app_root + "/lists/list_train_ridi_tiny.txt"
 
     #new_args["model_path"] = app_root + "/trained_models/ronin_resnet/checkpoint_gsn_latest.pt"
     new_args["keep_training"] = True
 
-    test_paths = []
+    RonninKlass = RonninTcnTrain
+
+    model = RonninKlass.select_model(new_args)
+    RonninKlass.inspect_model(model)
+
+    loss_v1, loss_v2, pt_path = RonninKlass.train(new_args)
+
     list_path = app_root + "/lists/list_test_ridi_tiny.txt"
-    with open(list_path, "rt") as f:
-        for line in f.readlines():
-            line = app_root + "/" + line.strip()
-            if os.path.isdir(line):
-                test_paths.append(line)
-
-    model = RonninTcnTrain.select_model(new_args)
-    RonninTcnTrain.inspect_model(model)
-
-    loss_v1, loss_v2, pt_path = RonninTcnTrain.train(new_args)
 
     new_args["model_path"] = pt_path
     new_args["test_list"] = list_path
@@ -218,4 +274,4 @@ if __name__ == '__main__':
     new_args["fast_test"] = False
     new_args["show_plot"] = True
 
-    losses_avg = RonninTcnTrain.test(new_args)
+    losses_avg = RonninKlass.test(new_args)

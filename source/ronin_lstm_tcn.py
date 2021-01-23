@@ -187,6 +187,7 @@ def train(args, **kwargs):
 
     global device
     device = torch.device(args.device if torch.cuda.is_available() else 'cpu')
+    print("device", device)
 
     if args.out_dir:
         if not osp.isdir(args.out_dir):
