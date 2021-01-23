@@ -179,21 +179,25 @@ class RonninTcnTrain(object):
 
     @classmethod
     def select_model(cls, new_args):
-        return _select_model(new_args)
+        args = _prepare_args(new_args)
+        from source.ronin_lstm_tcn import get_model
+        return get_model(args)
 
     @classmethod
     def inspect_model(cls, model):
-        return _inspect_model(model)
+        from source.ronin_lstm_tcn import inspect_model
+        inspect_model(model)
 
 
 
 if __name__ == '__main__':
     new_args = {}
+    new_args["type"] = "tcn"
     new_args["epochs"] = 1
     new_args["train_list"] = app_root + "/lists/list_train_ridi_tiny.txt"
+
     #new_args["model_path"] = app_root + "/trained_models/ronin_resnet/checkpoint_gsn_latest.pt"
     new_args["keep_training"] = True
-    new_args["show_plot"] = True
 
     test_paths = []
     list_path = app_root + "/lists/list_test_ridi_tiny.txt"
@@ -203,9 +207,15 @@ if __name__ == '__main__':
             if os.path.isdir(line):
                 test_paths.append(line)
 
+    model = RonninTcnTrain.select_model(new_args)
+    RonninTcnTrain.inspect_model(model)
+
     loss_v1, loss_v2, pt_path = RonninTcnTrain.train(new_args)
 
     new_args["model_path"] = pt_path
     new_args["test_list"] = list_path
+    new_args["test_path"] = None
+    new_args["fast_test"] = False
+    new_args["show_plot"] = True
 
     losses_avg = RonninTcnTrain.test(new_args)

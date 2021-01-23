@@ -128,6 +128,26 @@ def get_model(args, **kwargs):
     return network
 
 
+def inspect_model(model, batch_size=10, enforced=False):
+    try:
+        from torchinfo import summary
+        if model is not None and not hasattr(model, "model_examed") or enforced:
+            #if not torch.cuda.is_available():
+            # 6 channel, 200 samples/channel,  this does not include batch size
+            input_size = (6, 200)
+            batch_input_size = (batch_size, *input_size)
+            print("batch_input_shape", batch_input_size)
+            summary(model, batch_input_size, verbose=2, col_names=["input_size",
+                                                                   "output_size",
+                                                                   "num_params",
+                                                                   "kernel_size",
+                                                                   "mult_adds"])
+            #model.model_examed = True
+    except Exception as ex:
+        print("Exception occured ", ex)
+        print(model)
+
+
 def get_loss_function(history, args, **kwargs):
     if args.type == 'tcn':
         config = {'mode': 'part',
@@ -382,7 +402,7 @@ def test(args, **kwargs):
     seq_dataset = get_dataset(root_dir, test_data_list, args, mode='test', **kwargs)
 
     for idx, data in enumerate(test_data_list):
-        assert data == osp.split(seq_dataset.data_path[idx])[1]
+        #assert data == osp.split(seq_dataset.data_path[idx])[1]
 
         feat, vel = seq_dataset.get_test_seq(idx)
         feat = torch.Tensor(feat).to(device)
@@ -397,8 +417,11 @@ def test(args, **kwargs):
         pos_gt, gv_gt, _ = recon_traj_with_preds_global(seq_dataset, vel, ind=ind, type='gt', seq_id=idx)
 
         if args.out_dir is not None and osp.isdir(args.out_dir):
-            np.save(osp.join(args.out_dir, '{}_{}.npy'.format(data, args.type)),
-                    np.concatenate([pos_pred, pos_gt], axis=1))
+            try:
+                np.save(osp.join(args.out_dir, '{}_{}.npy'.format(data, args.type)),
+                        np.concatenate([pos_pred, pos_gt], axis=1))
+            except Exception as ex:
+                print("Exception occured", ex)
 
         ate = compute_absolute_trajectory_error(pos_pred, pos_gt)
         if pos_pred.shape[0] < pred_per_min:
@@ -443,7 +466,10 @@ def test(args, **kwargs):
                 plt.show()
 
             if args.out_dir is not None and osp.isdir(args.out_dir):
-                plt.savefig(osp.join(args.out_dir, '{}_{}.png'.format(data, args.type)))
+                try:
+                    plt.savefig(osp.join(args.out_dir, '{}_{}.png'.format(data, args.type)))
+                except Exception as ex:
+                    print("Exception occured", ex)
 
         if log_file is not None:
             with open(log_file, 'a') as f:
