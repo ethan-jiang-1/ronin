@@ -229,13 +229,15 @@ def train(args, **kwargs):
 
     start_epoch = 0
     if args.continue_from is not None and osp.exists(args.continue_from):
-        with open(osp.join(str(Path(args.continue_from).parents[1]), 'config.json'), 'r') as f:
-            model_data = json.load(f)
+        #json_filename = osp.join(str(Path(args.continue_from).parents[1]), 'config.json')
+        #with open(json_filename, 'r') as f:
+        #    model_data = json.load(f)
 
         if device.type == 'cpu':
             checkpoints = torch.load(args.continue_from, map_location=lambda storage, location: storage)
         else:
-            checkpoints = torch.load(args.continue_from, map_location={model_data['device']: args.device})
+            #checkpoints = torch.load(args.continue_from, map_location={model_data['device']: args.device})
+            checkpoints = torch.load(args.continue_from, map_location=lambda storage, location: storage)
 
         start_epoch = checkpoints.get('epoch', 0)
         network.load_state_dict(checkpoints.get('model_state_dict'))
