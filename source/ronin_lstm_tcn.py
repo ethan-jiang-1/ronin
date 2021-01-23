@@ -5,6 +5,7 @@ import time
 from os import path as osp
 from pathlib import Path
 from shutil import copyfile
+import traceback
 
 import numpy as np
 import torch
@@ -145,6 +146,7 @@ def inspect_model(model, batch_size=10, enforced=False):
             #model.model_examed = True
     except Exception as ex:
         print("Exception occured ", ex)
+        print(traceback.format_exc())
         print(model)
 
 
