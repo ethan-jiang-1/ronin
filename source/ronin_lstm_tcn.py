@@ -251,6 +251,7 @@ def train(args, **kwargs):
     train_errs = np.zeros(args.epochs)
 
     print("Starting from epoch {}".format(start_epoch))
+    epoch = start_epoch
     try:
         for epoch in range(start_epoch, args.epochs):
             log_line = ''
