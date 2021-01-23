@@ -1,9 +1,9 @@
 import json
 import os
-import sys
+#import sys
 import time
 from os import path as osp
-from pathlib import Path
+#from pathlib import Path
 from shutil import copyfile
 import traceback
 
@@ -447,7 +447,7 @@ def test(args, **kwargs):
             from ex_traj_odometr import TrajOdometer
             dis_pred = TrajOdometer.get_distance_2D(pos_pred)
             dis_gt = TrajOdometer.get_distance_2D(pos_gt)
-            dis_info = "distance: gt {:.2f}m pred {:.2f}m err:{:4f}".format(dis_pred, dis_gt, (dis_pred-dis_gt)/dis_gt)
+            dis_info = "distance: gt {:.2f}m pred {:.2f}m err:{:4f}".format(dis_pred, dis_gt, (dis_pred - dis_gt) / dis_gt)
             print(dis_info)
         except:
             pass

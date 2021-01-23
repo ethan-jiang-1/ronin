@@ -1,11 +1,11 @@
 import json
-import os
+#import os
 import random
 import sys
 from os import path as osp
 
 import h5py
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import numpy as np
 import quaternion
 from scipy.ndimage.filters import gaussian_filter1d

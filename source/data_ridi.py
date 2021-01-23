@@ -1,10 +1,10 @@
 from os import path as osp
-import sys
+#import sys
 
 import pandas
 import numpy as np
 import quaternion
-from scipy._lib.doccer import inherit_docstring_from
+#from scipy._lib.doccer import inherit_docstring_from
 
 from data_utils import CompiledSequence
 

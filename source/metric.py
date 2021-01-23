@@ -71,7 +71,7 @@ def compute_heading_error(est, gt):
         MSE error and angle difference from dot product
     """
 
-    mse_error = np.mean((est-gt)**2)
+    mse_error = np.mean((est - gt)**2)
     dot_prod = np.sum(est * gt, axis=1)
     angle = np.arccos(np.clip(dot_prod, a_min=-1, a_max=1))
 

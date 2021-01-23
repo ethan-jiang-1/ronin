@@ -249,4 +249,4 @@ class SequenceToSequenceDataset(Dataset):
         return len(self.index_map)
 
     def get_test_seq(self, i):
-        return self.features[i].astype(np.float32)[np.newaxis,], self.targets[i].astype(np.float32)
+        return self.features[i].astype(np.float32)[np.newaxis, ], self.targets[i].astype(np.float32)

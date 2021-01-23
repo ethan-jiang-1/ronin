@@ -2,7 +2,7 @@ import numpy as np
 import quaternion
 import math
 
-from numba import jit
+#from numba import jit
 from scipy.ndimage.filters import gaussian_filter1d
 
 

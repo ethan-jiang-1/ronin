@@ -125,7 +125,7 @@ def select_model(args, device=None):
 
     if hasattr(args, "keep_training"):
         if args.keep_training:
-            if os.path.isfile(args.model_path):
+            if args.model_path is not None and os.path.isfile(args.model_path):
                 print("load network from checkpoint and keep_training from ", args.model_path)
                 try:
                     if not torch.cuda.is_available() or args.cpu:
@@ -389,7 +389,7 @@ def test_sequence(args):
             from ex_traj_odometr import TrajOdometer
             dis_pred = TrajOdometer.get_distance_2D(pos_pred)
             dis_gt = TrajOdometer.get_distance_2D(pos_gt)
-            dis_info = "distance: gt {:.2f}m pred {:.2f}m err:{:4f}".format(dis_pred, dis_gt, (dis_pred-dis_gt)/dis_gt)
+            dis_info = "distance: gt {:.2f}m pred {:.2f}m err:{:4f}".format(dis_pred, dis_gt, (dis_pred - dis_gt) / dis_gt)
             print(dis_info)
         except:
             pass

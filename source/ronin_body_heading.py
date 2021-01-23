@@ -122,13 +122,13 @@ class HeadingNetwork(torch.nn.Module):
             return torch.sum(result * mask.float()) / torch.sum(mask)
 
     def get_channels(self):
-        l = 1
+        ll = 1
         c = 1
         if self.pre_norm:
             c += 1
         if self.concat_loss:
-            return l, c
-        return l + c, c
+            return ll, c
+        return ll + c, c
 
 
 def write_config(args, **kwargs):
@@ -474,7 +474,7 @@ def test(args, **kwargs):
             plt.figure('Results_Plot {}'.format(data), figsize=(12, 12))
 
             plt.plot(traj[:, 0], traj[:, 1], color='black')
-            for i in range(window, gt_heading.shape[0] - (window+sh), 1500):
+            for i in range(window, gt_heading.shape[0] - (window + sh), 1500):
                 gt_i = np.median(gt_angle[i - window:i + window])
                 p_i = np.median(predicted[i + sh - window:i + sh + window])
                 # gt_i = gt_angle[i]

@@ -8,13 +8,13 @@ from abc import ABC, abstractmethod
 from os import path as osp
 
 import cv2
-import h5py
+#import h5py
 import matplotlib.pyplot as plt
 import numpy as np
 import quaternion
 from scipy.interpolate import interp1d
 from sklearn import svm
-from sklearn.externals import joblib
+#from sklearn.externals import joblib
 from sklearn.model_selection import GridSearchCV
 
 sys.path.append(osp.join(osp.dirname(osp.abspath(__file__)), '..'))

@@ -1,6 +1,6 @@
 # hack to hook modules in subfolder
 
-import numpy as np
+#import numpy as np
 
 import os
 import sys
@@ -14,8 +14,8 @@ if app_root_source not in sys.path:
 if app_root_exam not in sys.path:
     sys.path.append(app_root_exam)
 
-from os import path as osp
-from source.utils import load_config
+#from os import path as osp
+#from source.utils import load_config
 
 
 print("app_root", app_root)
@@ -107,6 +107,7 @@ def _fake_args(args):
     args.out_dir = app_root + "/output"
     args.show_plot = True
     return args
+
 
 if __name__ == '__main__':
     _fake_sys_argv()

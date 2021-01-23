@@ -141,6 +141,7 @@ def _fake_args(args):
     args.out_dir = app_root + "/output"
     return args
 
+
 if __name__ == '__main__':
     _fake_sys_argv()
     args, kwargs = _get_args()

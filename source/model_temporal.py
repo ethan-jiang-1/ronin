@@ -1,5 +1,5 @@
-import sys
-import os.path as osp
+#import sys
+#import os.path as osp
 
 import torch
 from torch.autograd import Variable
@@ -33,7 +33,7 @@ class LSTMSeqNetwork(torch.nn.Module):
 
         self.lstm = torch.nn.LSTM(self.input_size, self.lstm_size, self.num_layers, batch_first=True, dropout=dropout)
         self.linear1 = torch.nn.Linear(self.lstm_size, self.output_size * 5)
-        self.linear2 = torch.nn.Linear(self.output_size*5, self.output_size)
+        self.linear2 = torch.nn.Linear(self.output_size * 5, self.output_size)
         self.hidden = self.init_weights()
 
     def forward(self, input, hidden=None):

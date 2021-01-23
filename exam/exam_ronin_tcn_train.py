@@ -31,6 +31,7 @@ def _find_config_file():
         return filename
     raise ValueError("failed_locate_config")
 
+
 '''
 run source/ronin_lstm_tcn.py with mode (train/test) and model type. 
 Please refer to the source code for the full list of command line arguments. 
@@ -213,8 +214,7 @@ class RonninLstmBiTrain(object):
     @classmethod
     def inspect_model(cls, model, batch_input_size=(2, 400, 6)):
         from source.ronin_lstm_tcn import inspect_model
-        inspect_model(model, batch_input_size=batch_input_size
-
+        inspect_model(model, batch_input_size=batch_input_size)
 
 
 class RonninLstmTrain(object):
@@ -237,9 +237,9 @@ class RonninLstmTrain(object):
         return get_model(args)
 
     @classmethod
-    def inspect_model(cls, model, arch="tcn"):
+    def inspect_model(cls, model, batch_input_size=(2, 400, 6)):
         from source.ronin_lstm_tcn import inspect_model
-        inspect_model(model, arch=arch)
+        inspect_model(model, batch_input_size=batch_input_size)
 
 
 def _get_list_paths(list_path):
@@ -250,6 +250,7 @@ def _get_list_paths(list_path):
             if os.path.isdir(line):
                 test_paths.append(line)
     return test_paths
+
 
 if __name__ == '__main__':
     new_args = {}

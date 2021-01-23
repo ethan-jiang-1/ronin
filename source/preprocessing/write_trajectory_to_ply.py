@@ -54,7 +54,7 @@ def write_ply_to_file(path, position, orientation, acceleration=None,
             for j in range(kpoints):
                 axes_pts = position_transformed[sample_pt[i]].flatten() +\
                            global_axes[:, k].flatten() * j * length / kpoints
-                app_vertex[k*kpoints + j] = tuple([*axes_pts, *axis_color[k]])
+                app_vertex[k * kpoints + j] = tuple([*axes_pts, *axis_color[k]])
 
         positions_data = np.concatenate([positions_data, app_vertex], axis=0)
     vertex_element = plyfile.PlyElement.describe(positions_data, 'vertex')
