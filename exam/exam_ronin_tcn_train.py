@@ -259,7 +259,7 @@ if __name__ == '__main__':
     #new_args["model_path"] = app_root + "/trained_models/ronin_resnet/checkpoint_gsn_latest.pt"
     new_args["keep_training"] = True
 
-    RonninKlass = RonninTcnTrain
+    RonninKlass = RonninLstmTrain
 
     model = RonninKlass.select_model(new_args)
     RonninKlass.inspect_model(model)
@@ -273,5 +273,6 @@ if __name__ == '__main__':
     new_args["test_path"] = None
     new_args["fast_test"] = False
     new_args["show_plot"] = True
+    new_args["batch_size"] = 1
 
     losses_avg = RonninKlass.test(new_args)
