@@ -253,8 +253,9 @@ def train(args, **kwargs):
 
     print("Starting from epoch {}".format(start_epoch))
     epoch = start_epoch
+    end_epoch = epoch + args.epochs
     try:
-        for epoch in range(start_epoch, args.epochs):
+        for epoch in range(start_epoch, end_epoch):
             log_line = ''
             network.train()
             train_vel = MSEAverageMeter(3, [2], _output_channel)
